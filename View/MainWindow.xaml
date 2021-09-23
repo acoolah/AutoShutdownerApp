@@ -1,0 +1,672 @@
+﻿<Window x:Class="ASApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Auto Shutdowner"
+        Height="600"
+        Width="700"
+        Background="#232323"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <Style x:Key="StandartButton"
+               TargetType="{x:Type Button}">
+            <Setter Property="Background"
+                    Value="White"/>
+            <Setter Property="Content">
+                <Setter.Value>
+                    <Image Source="Res\turnoff_black.png" Width="110"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="Transparent"
+                                CornerRadius="22">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="Background"
+                            Value="#444444"/>
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="Res\turnoff_white.png" Width="110"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="InfoButtonStyle"
+               TargetType="Image">
+            <Setter Property="Source"
+                    Value="Res\info_button.png"/>
+            <Setter Property="Width"
+                    Value="30"/>
+            <Setter Property="Height"
+                    Value="30"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Source" Value="Res\info_button_hover.png"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CloseButton"
+               TargetType="Image">
+            <Setter Property="Source"
+                    Value="Res\closeButton.png"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="Source"
+                            Value="Res\closeButton_hover.png"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="#444444" Height="7" CornerRadius="4">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5"
+                                                  Color="Black"
+                                                  Direction="-90"
+                                                  Opacity="0.1"/>
+                            </Border.Effect>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SliderRepeatButton1"
+               TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels"
+                    Value="true"/>
+            <Setter Property="OverridesDefaultStyle"
+                    Value="true"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True"
+                                Background="White"
+                                Height="7"
+                                CornerRadius="4"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SliderThumb"
+               TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels"
+                    Value="true"/>
+            <Setter Property="OverridesDefaultStyle"
+                    Value="true"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="20"
+                                 Width="20"
+                                 Fill="White"
+                                 Margin="-2,0,0,0">
+                            <Ellipse.Effect>
+                                <DropShadowEffect BlurRadius="10"
+                                                  Color="Black"
+                                                  Direction="-180"
+                                                  Opacity="0.2"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="Slider"
+                         TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"
+                                   MinHeight="{TemplateBinding MinHeight}"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1"
+                       x:Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"
+                                      Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"/>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}"
+                                      Command="Slider.IncreaseLarge"/>
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+        <Style x:Key="Horizontal_Slider"
+               TargetType="Slider">
+            <Setter Property="Focusable"
+                    Value="False"/>
+            <Setter Property="SnapsToDevicePixels"
+                    Value="true"/>
+            <Setter Property="OverridesDefaultStyle"
+                    Value="true"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation"
+                         Value="Horizontal">
+                    <Setter Property="MinHeight"
+                            Value="21"/>
+                    <Setter Property="MinWidth"
+                            Value="104"/>
+                    <Setter Property="Template"
+                            Value="{StaticResource Slider}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <ControlTemplate x:Key="RoundTextBox"
+                         TargetType="{x:Type TextBoxBase}">
+            <Border Background="Transparent"
+                    BorderBrush="White"
+                    BorderThickness="2"
+                    CornerRadius="12"/>
+            
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid x:Name="MoveSpace"
+              Height="150"
+              VerticalAlignment="Top" MouseDown="MoveSpace_MouseDown"
+              Background="Transparent"/>
+        <Canvas>
+            <TextBlock FontFamily="Roboto Black"
+                       FontSize="90"
+                       Foreground="White"
+                       Canvas.Left="59"
+                       Canvas.Top="112"
+                       Text="Auto">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-60"
+                                      BlurRadius="20"
+                                      Opacity="0.1"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock FontFamily="Roboto Black"
+                       FontSize="90"
+                       Foreground="White"
+                       Canvas.Left="59"
+                       Canvas.Top="192"
+                       Text="Shutdowner">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-60"
+                                      BlurRadius="20"
+                                      Opacity="0.1"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <Image Source="Res\image.png"
+                   Height="314"
+                   Canvas.Top="47"
+                   Width="284"
+                   Canvas.Left="350"/>
+        </Canvas>
+        <Button Style="{StaticResource StandartButton}"
+                Height="45"
+                Width="150"
+                FontFamily="Roboto"
+                FontSize="23"
+                x:Name="StartButton"
+                Margin="30,525,520,30" Click="StartButton_Click">
+            <Button.Effect>
+                <DropShadowEffect Color="Black"
+                                  Direction="-60"
+                                  BlurRadius="20"
+                                  Opacity="0.1"/>
+            </Button.Effect>
+        </Button>
+        <Image x:Name="InfoButton"
+               Style="{StaticResource InfoButtonStyle}"
+               Margin="640,540,30,30" MouseDown="InfoButton_MouseDown">
+            <Image.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="How to use it"/>
+                </ToolTip>
+            </Image.ToolTip>
+        </Image>
+        <Border x:Name="TipBox"
+                CornerRadius="25,25,0,25"
+                Width="300"
+                Height="150"
+                Margin="340,390,60,60"
+                Background="#444444"
+                Visibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="How to use it"
+                       FontFamily="Roboto Bold"
+                       Foreground="White"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,10,0,0">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black"
+                                  Direction="-90"
+                                  BlurRadius="1"
+                                  Opacity="0.2"
+                                  ShadowDepth="2"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+                <TextBlock Text="Select the time until shutdown"
+                           FontFamily="Roboto"
+                           FontWeight="Light"
+                           Foreground="White"
+                           FontSize="15"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="25,10,0,0"/>
+                <TextBlock Text="Click the 'Turn Off' button"
+                           FontFamily="Roboto"
+                           FontWeight="Light"
+                           Foreground="White"
+                           FontSize="15"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="25,10,0,0"/>
+                <TextBlock Text="12 hours maximum"
+                           FontFamily="Roboto"
+                           FontWeight="Light"
+                           Foreground="White"
+                           FontSize="15"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="25,10,0,0"/>
+                <TextBlock Text="Created by @acoola.h"
+                           FontFamily="Roboto"
+                           FontWeight="Light"
+                           Foreground="White"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,10,0,0"
+                           Opacity="0.1"/>
+            </StackPanel>
+            <Border.Effect>
+                <DropShadowEffect Color="Black"
+                                  Direction="-60"
+                                  BlurRadius="20"
+                                  Opacity="0.1"/>
+            </Border.Effect>
+        </Border>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top">
+            <Image Style="{StaticResource CloseButton}"
+                   x:Name="Close"
+                   Width="20"
+                   Height="20"
+                   Margin="15,15,20,15" MouseDown="Close_MouseDown"/>
+        </StackPanel>
+        <Slider Style="{StaticResource Horizontal_Slider}"
+                x:Name="TimeSlider"
+                Width="570"
+                Maximum="720"
+                Height="20"
+                Margin="30,366,100,213"
+                ValueChanged="TimeSlider_ValueChanged"
+                IsSnapToTickEnabled="True"
+                TickFrequency="5"/>
+        <TextBox x:Name="TimeSelection"
+                 Height="25"
+                 Width="60"
+                 Background="Transparent"
+                 Foreground="White"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 TextWrapping="NoWrap"
+                 FontFamily="Roboto Bold"
+                 FontSize="15"
+                 Text="0:00"
+                 BorderThickness="1.5"
+                 BorderBrush="White"
+                 Margin="610,364,30,211"
+                 Focusable="False"
+                 IsReadOnly="True">
+            <TextBox.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius"
+                            Value="12"/>
+                </Style>
+            </TextBox.Resources>
+            <TextBox.Effect>
+                <DropShadowEffect Color="Black"
+                                  Direction="-60"
+                                  BlurRadius="20"
+                                  Opacity="0.1"/>
+            </TextBox.Effect>
+        </TextBox>
+        
+        <!--Do not open-->
+        <StackPanel Name="RectanglesBelowSlider"
+                    Orientation="Horizontal"
+                    Height="15"
+                    Width="570" Margin="30,392,100,193">
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="6.5,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.5,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.7,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.7,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.8,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.7,0,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.6,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="6"
+                       Fill="#444444"
+                       Margin="5.7,-6,0,0"/>
+            <Rectangle Width="2"
+                       Height="12"
+                       Fill="#444444"
+                       Margin="5.6,0,0,0"/>
+        </StackPanel>
+        <!--Do not open-->
+        
+        <TextBlock Text="Timeout"
+                   Foreground="White"
+                   FontFamily="Roboto Light"
+                   FontSize="14"
+                   Height="14"
+                   Width="60" Margin="60,344,580,242"/>
+    </Grid>
+</Window>
